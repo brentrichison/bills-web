@@ -1,0 +1,146 @@
+version: 2.1
+
+jobs:
+  build_and_deploy:
+    docker:
+      - image: cimg/node:20.12
+    working_directory: ~/project
+    steps:
+      # 1) Get code
+      - checkout
+
+      # 2) Install deps with cache
+      - restore_cache:
+          keys:
+            - npm-cache-v1-{{ arch }}-{{ checksum "package-lock.json" }}
+            - npm-cache-v1-
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - save_cache:
+          key: npm-cache-v1-{{ arch }}-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
+
+      # 3) Build Application (Outputs files to ~/project/dist)
+      - run:
+          name: Build Application
+          command: npm run build
+      - run:
+          name: Verify Build Output
+          command: ls -la dist/
+
+      # --- Deployment Steps Start Here ---
+
+      # 4) Load SSH deploy key (Key fingerprint: SHA256:vkukLLgGKtlRJlHpT0SIZoWyXfXOomHnmAeABltbnI4)
+      - add_ssh_keys:
+          fingerprints:
+            - 'SHA256:vkukLLgGKtlRJlHpT0SIZoWyXfXOomHnmAeABltbnI4'
+      - run:
+          name: Show Loaded SSH Identities (debug)
+          command: ssh-add -l || true
+
+      # 5) Prove DEPLOY_HOST is set and DNS works
+      - run:
+          name: Show deploy target (debug)
+          command: |
+            set -euo pipefail
+            : "${DEPLOY_HOST:?Set DEPLOY_HOST in Project Settings → Environment Variables}"
+            echo "DEPLOY_HOST=$DEPLOY_HOST"
+            getent hosts "$DEPLOY_HOST" || (echo "DNS lookup failed for $DEPLOY_HOST" && exit 1)
+
+      # 6) Add remote host key to known_hosts (hostname + IPv4); don't fail if keyscan can't connect
+      - run:
+          name: Add Host Key to known_hosts
+          command: |
+            set -euo pipefail
+            : "${DEPLOY_HOST:?missing}"
+            mkdir -p ~/.ssh
+
+            DEPLOY_IP="$(getent ahostsv4 "$DEPLOY_HOST" | awk '{print $1; exit}')"
+            echo "Resolved IPv4: ${DEPLOY_IP:-none}"
+
+            ssh-keyscan -4 -T 5 -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+            [ -n "${DEPLOY_IP:-}" ] && ssh-keyscan -4 -T 5 -H "$DEPLOY_IP" >> ~/.ssh/known_hosts 2>/dev/null || true
+
+            echo "--- known_hosts ---"
+            cat ~/.ssh/known_hosts || true
+
+      # 7) Test SSH connectivity (verifies DEPLOY_USER and key)
+      - run:
+          name: Test SSH Connectivity
+          command: |
+            set -euo pipefail
+            : "${DEPLOY_USER:?Set DEPLOY_USER (e.g., ubuntu or ec2-user)}"
+            : "${DEPLOY_HOST:?Set DEPLOY_HOST}"
+            ssh -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes \
+              "${DEPLOY_USER}@${DEPLOY_HOST}" "echo SSH connection successful"
+
+      # 8) Ensure rsync is available in CI environment (apt-get based image)
+      - run:
+          name: Install rsync and openssh in CI
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y rsync openssh-client
+
+      # 9) Ensure rsync is available on the remote server
+      - run:
+          name: Ensure rsync on remote EC2
+          command: |
+            ssh -o IdentitiesOnly=yes "${DEPLOY_USER}@${DEPLOY_HOST}" '
+              set -e
+              if ! command -v rsync >/dev/null 2>&1; then
+                if command -v apt-get >/dev/null 2>&1; then
+                  sudo apt-get update && sudo apt-get install -y rsync
+                elif command -v dnf >/dev/null 2>&1; then
+                  sudo dnf -y install rsync
+                elif command -v yum >/dev/null 2>&1; then
+                  sudo yum -y install rsync
+                else
+                  echo "Rsync not found on remote and no apt-get/dnf/yum supported." >&2
+                  exit 1
+                fi
+              fi
+            '
+
+      # 10) Deploy: rsync dist/ -> DEPLOY_PATH (use sudo on remote for permissions)
+      - run:
+          name: Deploy dist/ to EC2 via rsync
+          command: |
+            set -euo pipefail
+            : "${DEPLOY_PATH:?Set DEPLOY_PATH (e.g., /var/www/html/ledger-lines.click)}"
+            rsync -avz --delete \
+              --rsync-path="sudo rsync" \
+              dist/ \
+              "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/"
+
+      # 11) Reload Nginx on remote
+      - run:
+          name: Reload Nginx on Remote Server
+          command: |
+            ssh -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes \
+              "${DEPLOY_USER}@${DEPLOY_HOST}" "sudo nginx -t && sudo systemctl reload nginx"
+
+      # 12) Fail if wrong audience/domain is embedded in built files (safety check)
+      # Keep only the fail-on-wrong-FE check
+      - run:
+          name: Validate domains in built assets
+          command: |
+            set -euo pipefail
+            FE_HOST="ledger-lines.click"
+            echo "✅ Ensuring Auth0 audience does NOT target the FE host..."
+            if grep -R -nE "audience=https%3A%2F%2F${FE_HOST//./\\.}" dist; then
+              echo "❌ Auth audience is pointing to FE host (${FE_HOST})"
+              exit 1
+            fi
+            echo "✅ Domain validation passed (no bad FE audience found)."
+
+# --- WORKFLOWS ---
+workflows:
+  deploy_main:
+    jobs:
+      - build_and_deploy:
+          filters:
+            branches:
+              only:
+                - main
