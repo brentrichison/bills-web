@@ -1,3 +1,4 @@
+import { DEFAULT_RETURN_TO } from '@/auth/helpers';
 import { Button } from '@mui/material';
 import { useAuth } from 'react-oidc-context';
 
@@ -17,9 +18,8 @@ export const AuthButton = () => {
           returnTo
         )}`
       );
-    } else {
-      auth.signinRedirect();
-    }
+    } else
+      await auth.signinRedirect({ state: { returnTo: DEFAULT_RETURN_TO } });
   };
 
   return (

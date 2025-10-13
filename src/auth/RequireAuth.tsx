@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useAuth } from 'react-oidc-context';
 import { useLocation } from 'react-router-dom';
 import type { JSX } from 'react';
+import { Box, Button, Typography } from '@mui/material';
 
 export const RequireAuth = ({ children }: { children: JSX.Element }) => {
   const auth = useAuth();
@@ -40,9 +41,9 @@ export const RequireAuth = ({ children }: { children: JSX.Element }) => {
   if (auth.isLoading || auth.activeNavigator) return <p>Loading…</p>;
   if (auth.error) {
     return (
-      <div>
-        <p>Auth error: {String(auth.error)}</p>
-        <button
+      <Box>
+        <Typography color="error">Auth error: {String(auth.error)}</Typography>
+        <Button
           onClick={() => {
             started.current = false;
             auth
@@ -53,8 +54,8 @@ export const RequireAuth = ({ children }: { children: JSX.Element }) => {
           }}
         >
           Try sign-in again
-        </button>
-      </div>
+        </Button>
+      </Box>
     );
   }
   if (!auth.isAuthenticated) return <p>Redirecting…</p>;

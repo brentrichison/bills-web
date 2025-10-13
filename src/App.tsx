@@ -5,7 +5,7 @@ import { AccountPage } from '@/pages/AccountPage/AccountPage';
 import { OidcCallback } from '@/auth/OidcCallback';
 import { Header } from '@/components/Header/Header';
 import { ProtectedBillsLayout } from '@/auth/ProtectedRoutes';
-import { HomePage } from '@/pages/HomePage/HomePage';
+// import { HomePage } from '@/pages/HomePage/HomePage';
 
 export const App = () => {
   return (
@@ -15,13 +15,13 @@ export const App = () => {
         <Route path="/oidc-callback" element={<OidcCallback />} />
 
         <Route element={<ProtectedBillsLayout />}>
-          <Route path="/" element={<HomePage />} />
+          {/* <Route path="/" element={<HomePage />} /> */}
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/bills" element={<BillPage />} />
           <Route path="/accounts" element={<AccountPage />} />
         </Route>
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/calendar" replace />} />
       </Routes>
     </>
   );
