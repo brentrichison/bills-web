@@ -61,7 +61,7 @@ export const renderBills = (
             </TableCell>
 
             <TableCell align="right">
-              {getSuffix((b.occurrence.month ?? -1 + 1).toString())}
+              {getSuffix((Number(b.occurrence.month) + 1).toString())}
             </TableCell>
 
             {!isInModal && (

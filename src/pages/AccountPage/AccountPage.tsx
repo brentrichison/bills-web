@@ -47,6 +47,7 @@ export const AccountPage = () => {
         .filter((acc) => acc.id !== id)
         .sort((a, b) => a.name.localeCompare(b.name))
     );
+    setDeleteTarget(null);
   };
 
   const renderDeleteModal = () => (
@@ -92,12 +93,15 @@ export const AccountPage = () => {
             <TableCell align="right">Actions</TableCell>
           </TableRow>
         </TableHead>
+
         <TableBody>
           {accounts.map((acc) => (
             <TableRow key={acc.id} hover>
               <TableCell>{acc.name}</TableCell>
-              <TableCell align="right">{acc.amount}</TableCell>
-              <TableCell align="right">{acc.depositAmount}</TableCell>
+              <TableCell align="right">${acc.amount.toFixed(2)}</TableCell>
+              <TableCell align="right">
+                ${acc.depositAmount.toFixed(2)}
+              </TableCell>
               <TableCell align="right">
                 <IconButton
                   aria-label="edit account"

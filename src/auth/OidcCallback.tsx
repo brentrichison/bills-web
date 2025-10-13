@@ -10,7 +10,7 @@ export const OidcCallback = () => {
     if (auth.isAuthenticated) {
       const url =
         (auth.user as unknown as { state?: { returnTo?: string } })?.state
-          ?.returnTo || '/';
+          ?.returnTo || '/calendar';
       navigate(url, { replace: true });
     }
   }, [auth.isAuthenticated, auth.user, navigate]);
