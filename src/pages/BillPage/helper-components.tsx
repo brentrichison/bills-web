@@ -1,7 +1,6 @@
 import type { AccountType, BillType } from '@/models/types';
 import { Delete, Edit } from '@mui/icons-material';
 import {
-  Box,
   Button,
   Grid,
   IconButton,
@@ -128,16 +127,29 @@ export const renderForm = (
   cb: () => void,
   bill?: BillType
 ) => (
-  <Box
+  <Grid
     bgcolor="background.paper"
+    container
     component="form"
     onSubmit={handleSubmit}
     p="1rem"
+    spacing="1rem"
   >
-    <Name updateBill={updateBill} value={bill?.name} />
-    <Amount updateBill={updateBill} value={bill?.amount} />
-    <Occurrence updateBill={updateBill} value={bill?.occurrence} />
-    <Accounts updateBill={updateBill} value={bill?.accountId} />
+    <Grid size={{ xs: 12 }}>
+      <Name updateBill={updateBill} value={bill?.name} />
+    </Grid>
+
+    <Grid size={{ xs: 12 }}>
+      <Amount updateBill={updateBill} value={bill?.amount} />
+    </Grid>
+
+    <Grid size={{ xs: 12 }}>
+      <Occurrence updateBill={updateBill} value={bill?.occurrence} />
+    </Grid>
+
+    <Grid size={{ xs: 12 }}>
+      <Accounts updateBill={updateBill} value={bill?.accountId} />
+    </Grid>
 
     <Grid container justifyContent="flex-end" spacing=".5rem">
       <Grid>
@@ -152,5 +164,5 @@ export const renderForm = (
         </Button>
       </Grid>
     </Grid>
-  </Box>
+  </Grid>
 );

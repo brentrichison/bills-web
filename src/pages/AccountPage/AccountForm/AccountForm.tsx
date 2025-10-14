@@ -1,7 +1,7 @@
 import { useCreateAccount } from '@/hooks/useCreateAccount';
 import { useUpdateAccount } from '@/hooks/useUpdateAccount';
 import { ButtonText } from '@/pages/BillPage/helpers';
-import { Box, Button, Grid, TextField, Typography } from '@mui/material';
+import { Button, Grid, TextField, Typography } from '@mui/material';
 import { useState, type FormEvent } from 'react';
 import {
   type AccountFormProps,
@@ -85,82 +85,76 @@ export const AccountForm = ({
   };
 
   const renderForm = () => (
-    <Box
+    <Grid
       bgcolor="background.paper"
+      container
       component="form"
-      onSubmit={handleSubmit()}
-      my={1}
+      onSubmit={handleSubmit}
+      p="1rem"
+      spacing="1rem"
     >
-      <Grid container spacing={2}>
-        <Grid size={GridSize}>
-          <TextField
-            fullWidth
-            label="Name"
-            name="name"
-            placeholder="e.g., Checking"
+      <Grid size={GridSize}>
+        <TextField
+          fullWidth
+          label="Name"
+          name="name"
+          placeholder="e.g., Checking"
+          variant="outlined"
+          value={stateName}
+          onChange={(e) => setStateName(e.target.value)}
+        />
+      </Grid>
+
+      <Grid size={GridSize}>
+        <TextField
+          fullWidth
+          label="Amount"
+          name="amount"
+          placeholder="e.g., 100.00"
+          slotProps={slotsProps}
+          type="number"
+          variant="outlined"
+          value={stateAmount == null ? '' : stateAmount.toString()}
+          onChange={(e) => setStateAmount(twoDecimals(e.target.value))}
+        />
+      </Grid>
+
+      <Grid size={GridSize}>
+        <TextField
+          fullWidth
+          label="Deposit Amount"
+          name="depositAmount"
+          placeholder="e.g., 100.00"
+          slotProps={slotsProps}
+          type="number"
+          variant="outlined"
+          value={
+            stateDepositAmount == null ? '' : stateDepositAmount.toString()
+          }
+          onChange={(e) => setStateDepositAmount(twoDecimals(e.target.value))}
+        />
+      </Grid>
+
+      <Grid container justifyContent="flex-end" spacing=".5rem">
+        <Grid>
+          <Button
             variant="outlined"
-            value={stateName}
-            onChange={(e) => setStateName(e.target.value)}
-          />
+            onClick={() => {
+              toggleOpenDrawer(false);
+              setEditTarget?.(null);
+            }}
+          >
+            {ButtonText.cancel}
+          </Button>
         </Grid>
 
-        <Grid size={GridSize}>
-          <TextField
-            fullWidth
-            label="Amount"
-            name="amount"
-            placeholder="e.g., 100.00"
-            slotProps={slotsProps}
-            type="number"
-            variant="outlined"
-            value={stateAmount == null ? '' : stateAmount.toString()}
-            onChange={(e) => setStateAmount(twoDecimals(e.target.value))}
-          />
-        </Grid>
-
-        <Grid size={GridSize}>
-          <TextField
-            fullWidth
-            label="Deposit Amount"
-            name="depositAmount"
-            placeholder="e.g., 100.00"
-            slotProps={slotsProps}
-            type="number"
-            variant="outlined"
-            value={
-              stateDepositAmount == null ? '' : stateDepositAmount.toString()
-            }
-            onChange={(e) => setStateDepositAmount(twoDecimals(e.target.value))}
-          />
-        </Grid>
-
-        <Grid container size={GridSize}>
-          <Grid size={{ xs: 6 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => {
-                toggleOpenDrawer(false);
-                setEditTarget?.(null);
-              }}
-            >
-              {ButtonText.cancel}
-            </Button>
-          </Grid>
-
-          <Grid size={{ xs: 6 }}>
-            <Button
-              disabled={isDisabled}
-              fullWidth
-              variant="contained"
-              type="submit"
-            >
-              {id ? ButtonText.updateAccount : ButtonText.createAccount}
-            </Button>
-          </Grid>
+        <Grid>
+          <Button disabled={isDisabled} variant="contained" type="submit">
+            {id ? ButtonText.updateAccount : ButtonText.createAccount}
+          </Button>
         </Grid>
       </Grid>
-    </Box>
+    </Grid>
   );
 
   return (
