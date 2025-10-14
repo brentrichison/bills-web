@@ -14,9 +14,6 @@ export const HomePage = () => {
   const { accounts, bills } = useAppContext();
   const { count, total } = dueThisWeek(bills);
 
-  console.log({ accounts, bills });
-  console.log(count, total);
-
   const Hero = () => {
     return (
       <Box
