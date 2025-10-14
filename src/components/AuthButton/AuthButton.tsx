@@ -29,7 +29,7 @@ export const AuthButton = () => {
       disabled={auth?.isLoading}
       name="auth-button"
       variant="outlined"
-      sx={{ display: { xs: 'none', md: 'inline-flex' } }}
+      sx={{ display: 'inline-flex' }}
       onClick={handleClick}
     >
       {auth?.isAuthenticated ? 'Logout' : 'Login'}
