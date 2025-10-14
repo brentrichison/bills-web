@@ -44,8 +44,9 @@ export const AccountForm = ({
     isPending ||
     updateIsPending;
 
-  const handleSubmit = () => async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!stateName || !stateAmount || !stateDepositAmount) return;
 
     if (!id) {
@@ -89,9 +90,9 @@ export const AccountForm = ({
       bgcolor="background.paper"
       container
       component="form"
-      onSubmit={handleSubmit}
       p="1rem"
       spacing="1rem"
+      onSubmit={handleSubmit}
     >
       <Grid size={GridSize}>
         <TextField
@@ -149,7 +150,7 @@ export const AccountForm = ({
         </Grid>
 
         <Grid>
-          <Button disabled={isDisabled} variant="contained" type="submit">
+          <Button disabled={isDisabled} type="submit" variant="contained">
             {id ? ButtonText.updateAccount : ButtonText.createAccount}
           </Button>
         </Grid>
