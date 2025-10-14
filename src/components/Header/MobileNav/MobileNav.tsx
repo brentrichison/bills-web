@@ -2,6 +2,7 @@ import { Box, IconButton, Menu, MenuItem } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import type { NavItemType } from '@/models/types';
+import { AuthButton } from '@/components/AuthButton/AuthButton';
 
 type MobileNavProps = {
   anchorEl: null | HTMLElement;
@@ -49,8 +50,9 @@ export const MobileNav = ({
           {n.label}
         </MenuItem>
       ))}
-      <MenuItem component={Link} to="/login" onClick={() => setAnchorEl(null)}>
-        Login
+
+      <MenuItem>
+        <AuthButton />
       </MenuItem>
     </Menu>
   </Box>
