@@ -9,10 +9,12 @@ import {
 import { Link } from 'react-router-dom';
 import { useAppContext } from '@/context/AppContext';
 import { dueThisWeek } from './helpers';
+import { DueList } from './DueList/DueList';
+import { HomePageText } from './constants';
 
 export const HomePage = () => {
   const { accounts, bills } = useAppContext();
-  const { count, total } = dueThisWeek(bills);
+  const { bills: dueBills, count, total } = dueThisWeek(bills);
 
   const Hero = () => {
     return (
@@ -23,22 +25,21 @@ export const HomePage = () => {
         textAlign="center"
       >
         <Typography component="h1" variant="h4" mt="4rem">
-          Keep your budget calm and predictable
+          {HomePageText.title}
         </Typography>
 
-        <Typography mb="2rem" mt=".5rem" variant="subtitle1">
-          See what&rsquo;s due next, how much is safe to spend, and where your
-          money goes - without the noise.
+        <Typography mb="3rem" mt=".5rem" variant="subtitle1">
+          {HomePageText.subtitle}
         </Typography>
 
-        <Grid container mb="2rem" spacing=".5rem">
+        <Grid container mb="1rem" spacing=".5rem">
           <Grid size={{ xs: 12, sm: 'auto' }}>
             <Button fullWidth type="button" variant="contained">
               <Link
                 to="/accounts"
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
-                view or add accounts
+                {HomePageText.accounts}
               </Link>
             </Button>
           </Grid>
@@ -49,7 +50,7 @@ export const HomePage = () => {
                 to="/bills/"
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
-                view or add bills
+                {HomePageText.bills}
               </Link>
             </Button>
           </Grid>
@@ -99,18 +100,22 @@ export const HomePage = () => {
       <Grid container mt="2rem" justifyContent="center" spacing=".5rem">
         <Grid size={{ xs: 12, sm: 4 }}>
           <StatCard
-            label="Accounts monthly total"
+            label={HomePageText.accountsMonthlyTotal}
             value={`$${accountTotals()}`}
-            sub="monthly balance expected"
+            sub={HomePageText.accountsDepositsExpected}
           />
         </Grid>
 
         <Grid size={{ xs: 12, sm: 4 }}>
           <StatCard
-            label="Scheduled this week"
+            label={HomePageText.scheduledThisWeek}
             value={total ? `$${total.toFixed(2)}` : '$0.00'}
-            sub={`${count} bills due`}
+            sub={`${count} ${HomePageText.billsDue}`}
           />
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 8 }}>
+          <DueList bills={dueBills} />
         </Grid>
       </Grid>
     );
