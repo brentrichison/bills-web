@@ -96,7 +96,7 @@ export function CalendarPage() {
     return <Typography>No data for {monthName(year, monthIndex)}</Typography>;
 
   return (
-    <Box>
+    <Box overflow="scroll">
       <Box display="flex" alignItems="center" justifyContent="space-between">
         <Box />
         <Box alignItems="center" display="flex" gap={1}>

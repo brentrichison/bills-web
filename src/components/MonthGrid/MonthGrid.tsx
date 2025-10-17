@@ -8,6 +8,7 @@ import { Box, Modal, Typography } from '@mui/material';
 import { useState } from 'react';
 import { renderBills } from '@pages/BillPage/helper-components';
 import { useAppContext } from '@/context/AppContext';
+import { isToday } from 'date-fns';
 
 type MonthGridProps = {
   weeks: CalendarWeekType[];
@@ -69,7 +70,7 @@ export const MonthGrid = ({ weeks, weeklyTotals }: MonthGridProps) => {
                   ? 'background.paper'
                   : (theme) => theme.palette.grey[200],
                 borderStyle: 'solid',
-                borderColor: 'divider',
+                borderColor: isToday(date) ? 'primary.main' : 'divider',
                 borderWidth: '.05rem',
                 borderRadius: 1,
                 borderLeftWidth: i % 7 === 0 ? '.1rem' : '.05rem',
