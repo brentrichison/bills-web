@@ -1,7 +1,7 @@
 import type { BillType } from '@/models/types';
 import { getSuffix, WeekDays } from '@/pages/BillPage/helpers';
 import { Box, List, ListItem, ListItemText, Typography } from '@mui/material';
-import { HomePageText } from '../constants';
+import { HomePageText } from '../../utils/constants';
 
 type Props = {
   bills: BillType[];
@@ -32,8 +32,8 @@ export const DueList = ({ bills }: Props) => {
             <ListItemText
               primary={bill.name}
               secondary={
-                getSuffix((Number(bill.occurrence.month) + 1).toString()) ||
-                `${WeekDays[bill.occurrence.day ?? -1]}`
+                getSuffix((Number(bill.occurrence?.month) + 1).toString()) ||
+                `${WeekDays[bill.occurrence?.day ?? -1]}`
               }
             />
           </ListItem>
