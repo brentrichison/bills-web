@@ -173,7 +173,7 @@ describe('BillPage', () => {
     });
   });
 
-  test.only('when clicking save, save is called and drawer closes', () => {
+  test('when clicking save, save is called and drawer closes', () => {
     const accounts: AccountType[] = [
       { id: 1, name: 'Checking Account', amount: 1000, depositAmount: 500 },
     ];
