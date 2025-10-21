@@ -1,5 +1,5 @@
 import type { BillType } from '@/models/types';
-import { getSuffix, WeekDays } from '@/pages/BillPage/helpers';
+import { getSuffix, WeekDays } from '@/pages/BillPage/utils/helpers';
 import { Box, List, ListItem, ListItemText, Typography } from '@mui/material';
 import { HomePageText } from '../../utils/constants';
 

@@ -1,5 +1,5 @@
 import type { OccurrenceSelectType } from '@/models/types';
-import { getSuffix } from '../helpers';
+import { getSuffix } from '../utils/helpers';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 type Props = Omit<OccurrenceSelectType, 'billId'> & {

@@ -1,5 +1,5 @@
 import type { OccurrenceSelectType } from '@/models/types';
-import { WeekDays } from '../helpers';
+import { WeekDays } from '../utils/helpers';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 type Props = Omit<OccurrenceSelectType, 'billId'> & {

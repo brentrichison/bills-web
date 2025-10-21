@@ -1,11 +1,15 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { ChangeText } from './helpers';
+import { ChangeText } from './utils/helpers';
 import type { BillType } from '@/models/types';
 import { useCreateBill } from '@/hooks/useCreateBill';
 import { useUpdateBill } from '@/hooks/useUpdateBill';
 import { useDeleteBill } from '@/hooks/useDeleteBill';
 import { useAppContext } from '@/context/AppContext';
-import { renderBills, renderErrors, renderForm } from './helper-components';
+import {
+  renderBills,
+  renderErrors,
+  renderForm,
+} from './utils/helper-components';
 import { Box, Button, Drawer, Modal, Typography } from '@mui/material';
 
 export const BillPage = () => {
@@ -167,9 +171,10 @@ export const BillPage = () => {
   }, [bills]);
 
   return (
-    <>
+    <Box data-testid="bill-page">
       <Button
         color="secondary"
+        data-testid="add-bill-button"
         sx={{
           float: 'right',
         }}
@@ -200,6 +205,6 @@ export const BillPage = () => {
       </Drawer>
 
       {renderDeleteModal()}
-    </>
+    </Box>
   );
 };

@@ -12,12 +12,12 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { ButtonText, ChangeText, getSuffix, WeekDays } from './helpers';
+import { ButtonText, ChangeText, getSuffix, WeekDays } from '../utils/helpers';
 import { Link } from 'react-router-dom';
-import { Name } from './Name/Name';
-import { Amount } from './Amount/Amount';
-import { Occurrence } from './Occurrence/Occurrence';
-import { Accounts } from './Accounts/Accounts';
+import { Name } from '../Name/Name';
+import { Amount } from '../Amount/Amount';
+import { Occurrence } from '../Occurrence/Occurrence';
+import { Accounts } from '../Accounts/Accounts';
 import type { FormEvent } from 'react';
 
 export const findAccountName = (
@@ -68,6 +68,7 @@ export const renderBills = (
                 <IconButton
                   aria-label="edit account"
                   color="primary"
+                  data-testid="edit-bill-button"
                   size="small"
                   onClick={() => editBill(b)}
                 >
@@ -76,8 +77,9 @@ export const renderBills = (
 
                 <IconButton
                   aria-label="delete account"
-                  size="small"
                   color="error"
+                  data-testid="delete-bill-button"
+                  size="small"
                   onClick={() => deleteBill(b.id ? b.id : -1)}
                 >
                   <Delete fontSize="small" />
@@ -98,14 +100,18 @@ export const renderErrors = (
 ) => (
   <>
     {error && (
-      <Typography color="error" variant="body2">
+      <Typography color="error" data-testid="error-message" variant="body2">
         {error.message}
       </Typography>
     )}
 
     {accounts.length === 0 && (
       <>
-        <Typography color="error" variant="body2">
+        <Typography
+          color="error"
+          data-testid="no-accounts-error"
+          variant="body2"
+        >
           No accounts yet. You must have accounts created first to create a
           bill. Go to <Link to="/accounts">Accounts</Link> to start.
         </Typography>
@@ -113,7 +119,7 @@ export const renderErrors = (
     )}
 
     {bills.length === 0 && (
-      <Typography color="error" variant="body2">
+      <Typography color="error" data-testid="no-bills-error" variant="body2">
         No bills yet. Add new bill and click "{ButtonText.saveBill}" to start.
       </Typography>
     )}
@@ -131,6 +137,7 @@ export const renderForm = (
     bgcolor="background.paper"
     container
     component="form"
+    data-testid="bill-form"
     onSubmit={handleSubmit}
     p="1rem"
     spacing="1rem"
@@ -153,13 +160,23 @@ export const renderForm = (
 
     <Grid container justifyContent="flex-end" spacing=".5rem">
       <Grid>
-        <Button variant="outlined" type="button" onClick={() => cb()}>
+        <Button
+          data-testid="cancel-bill-button"
+          type="button"
+          variant="outlined"
+          onClick={() => cb()}
+        >
           {ButtonText.cancel}
         </Button>
       </Grid>
 
       <Grid>
-        <Button disabled={isDisabled} type="submit" variant="contained">
+        <Button
+          data-testid="save-bill-button"
+          disabled={isDisabled}
+          type="submit"
+          variant="contained"
+        >
           {ButtonText.saveBill}
         </Button>
       </Grid>
