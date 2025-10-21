@@ -1,5 +1,5 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { ChangeText, type BaseBillProps } from '../helpers';
+import { ChangeText, type BaseBillProps } from '../utils/helpers';
 import { useState, type FC } from 'react';
 import { useAppContext } from '@/context/AppContext';
 import type { AccountType } from '@/models/types';

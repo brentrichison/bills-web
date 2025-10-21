@@ -1,91 +1,14 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-} from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Box, Grid } from '@mui/material';
 import { useAppContext } from '@/context/AppContext';
-import { dueThisWeek } from './helpers';
-import { DueList } from './DueList/DueList';
-import { HomePageText } from './constants';
+import { dueThisWeek } from './utils/helpers';
+import { DueList } from './components/DueList/DueList';
+import { HomePageText } from './utils/constants';
+import { Hero } from './components/Hero/Hero';
+import { StatCard } from './components/StatCard/StatCard';
 
 export const HomePage = () => {
   const { accounts, bills } = useAppContext();
   const { bills: dueBills, count, total } = dueThisWeek(bills);
-
-  const Hero = () => {
-    return (
-      <Box
-        alignItems="center"
-        display="flex"
-        flexDirection="column"
-        textAlign="center"
-      >
-        <Typography component="h1" variant="h4" mt="4rem">
-          {HomePageText.title}
-        </Typography>
-
-        <Typography mb="3rem" mt=".5rem" variant="subtitle1">
-          {HomePageText.subtitle}
-        </Typography>
-
-        <Grid container mb="1rem" spacing=".5rem">
-          <Grid size={{ xs: 12, sm: 'auto' }}>
-            <Button fullWidth type="button" variant="contained">
-              <Link
-                to="/accounts"
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                {HomePageText.accounts}
-              </Link>
-            </Button>
-          </Grid>
-
-          <Grid size={{ xs: 12, sm: 'auto' }}>
-            <Button fullWidth type="button" variant="contained">
-              <Link
-                to="/bills/"
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                {HomePageText.bills}
-              </Link>
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
-    );
-  };
-
-  const StatCard = ({
-    label,
-    value,
-    sub,
-  }: {
-    label: string;
-    value: string;
-    sub: string;
-  }) => {
-    return (
-      <Card>
-        <CardContent>
-          <Typography color="text.secondary" gutterBottom variant="h6">
-            {label}
-          </Typography>
-
-          <Typography gutterBottom variant="h5">
-            {value}
-          </Typography>
-
-          <Typography color="text.secondary" variant="body2">
-            {sub}
-          </Typography>
-        </CardContent>
-      </Card>
-    );
-  };
 
   const accountTotals = () => {
     const accountTotals = accounts.reduce((s, a) => s + a.amount, 0).toFixed(2);
@@ -122,9 +45,9 @@ export const HomePage = () => {
   };
 
   return (
-    <>
+    <Box data-testid="home-page">
       <Hero />
       <Snapshot />
-    </>
+    </Box>
   );
 };

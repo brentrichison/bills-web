@@ -6,7 +6,7 @@ import type {
 import { CalendarHeader } from '@components/CalendarHeader/CalendarHeader';
 import { Box, Modal, Typography } from '@mui/material';
 import { useState } from 'react';
-import { renderBills } from '@pages/BillPage/helper-components';
+import { renderBills } from '@/pages/BillPage/utils/helper-components';
 import { useAppContext } from '@/context/AppContext';
 import { isToday } from 'date-fns';
 

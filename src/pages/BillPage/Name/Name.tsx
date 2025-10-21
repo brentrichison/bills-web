@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material';
-import { ChangeText, type BaseBillProps } from '../helpers';
+import { ChangeText, type BaseBillProps } from '../utils/helpers';
 import { type FC } from 'react';
 
 export const Name: FC<BaseBillProps> = ({ updateBill, value }) => (

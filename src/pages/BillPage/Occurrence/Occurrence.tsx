@@ -4,7 +4,7 @@ import { OccurrenceWeekSelect } from './OccurrenceWeekSelect';
 import { OccurrenceMonthSelect } from './OccurrenceMonthSelect';
 import { useState, type FC } from 'react';
 import { FormGroup } from '@mui/material';
-import { ChangeText, type BaseBillProps } from '../helpers';
+import { ChangeText, type BaseBillProps } from '../utils/helpers';
 
 export const Occurrence: FC<BaseBillProps> = ({ updateBill, value }) => {
   const GridSize = { xs: 12 };
